@@ -2,7 +2,7 @@ import unittest
 from src.RBAC import RoleBaseAccessControl
 from src.config import config
 
-class TestLoginUser(unittest.TestCase):
+class TestCreateUser(unittest.TestCase):
 
     def tearDown(self):
         config['USER'].pop('U1')

@@ -7,7 +7,7 @@ class TestLoginUser(unittest.TestCase):
         result = object.loginUser('U0')
         self.assertEquals(result, "hi! you are logged in as U0, Admin")
 
-    def test2_loginUserDoesntExist(self):
+    def test2_loginUserNotExist(self):
         object = RoleBaseAccessControl()
         result = object.loginUser('U1')
         self.assertEquals(result, "User Doesn't Exist!!")
