@@ -27,19 +27,16 @@ class RoleBaseAccessControl:
             prettyTable.add_row(data)
         print(prettyTable)
 
-    def is_access_allowed(self):
+    def is_access_allowed(self, userID, actionType, resourceID):
         is_access_allowed = False
-        userID = raw_input("Enter User ID: ")
-        actionType = raw_input("Enter Action Type(Read/Write/Delete): ")
-        resourceID = raw_input("Enter Resource ID: ")
         if userID not in config["USER"].keys():
-            print("Incorrect User ID")
+            return "Incorrect User ID"
         elif actionType not in config['ACTION_TYPE']:
-            print("Incorrect Action Type")
+            return "Incorrect Action Type"
         elif resourceID not in config['RESOURCE'].keys():
-            print('Resource not Found')
+            return 'Resource not Found'
         elif userID not in UserRoleMapping:
-            print("You are not allowed to access the given Resource")
+            return "You are not allowed to access the given Resource"
         else:
             roles = UserRoleMapping[userID]["Role"]
             for role in roles:
@@ -49,36 +46,34 @@ class RoleBaseAccessControl:
                         is_access_allowed = True
                         break
             if is_access_allowed:
-                print("You are allowed to access the given Resource")
+                return "You are allowed to access the given Resource"
             else:
-                print("You are not allowed to access the given Resource")
+                return "You are not allowed to access the given Resource"
 
 
-    def assignRole(self):
-        user_id = raw_input("Enter User ID: ")
-        role_id = raw_input("Enter Role Name: ")
+    def assignRole(self, user_id, role_id):
         if user_id not in config["USER"].keys():
-            print("Incorrect User ID")
+            return "Incorrect User ID"
         elif role_id not in config["ROLE"].keys():
-            print("Invalid Role ID")
+            return "Invalid Role ID"
         elif user_id in UserRoleMapping and role_id in UserRoleMapping[user_id]["Role"]:
-            print("Role has already been assigned to the User")
+            return "Role has already been assigned to the User"
         elif user_id in UserRoleMapping:
             UserRoleMapping[user_id]["Role"].append(role_id)
+            return "Role has been assigned to the User"
         else:
             UserRoleMapping[user_id] = {
                 "Role": [role_id]
             }
+            return "Role has been assigned to the User"
 
-    def removeRole(self):
-        user_id = raw_input("Enter User ID: ")
-        role_id = raw_input("Enter Role Name: ")
+    def removeRole(self, user_id, role_id):
         if user_id not in config["USER"].keys():
-            print("Incorrect User ID")
+            return "Incorrect User ID"
         elif role_id not in config["ROLE"].keys():
-            print("Invalid Role ID")
+            return "Invalid Role ID"
         elif user_id not in UserRoleMapping or role_id not in UserRoleMapping[user_id]["Role"]:
-            print("There is no such role in the user account")
+            return "There is no such role in the user account"
         elif user_id in UserRoleMapping:
             roles = UserRoleMapping[user_id]["Role"]
             if role_id in roles:
@@ -86,8 +81,9 @@ class RoleBaseAccessControl:
                     UserRoleMapping.pop(user_id)
                 else:
                     UserRoleMapping[user_id]["Role"].remove(role_id)
+            return "Role has been removed from the User"
         else:
-            print("Contact System Administrator")
+            return "Contact System Administrator"
 
 if __name__ == '__main__':
     object = RoleBaseAccessControl()
@@ -112,11 +108,18 @@ if __name__ == '__main__':
             dataset = object.viewRoles()
             object.printPrettyTable(dataset)
         elif option == 4:
-            object.is_allowed()
+            userID = raw_input("Enter User ID: ")
+            actionType = raw_input("Enter Action Type(Read/Write/Delete): ")
+            resourceID = raw_input("Enter Resource ID: ")
+            print(object.is_access_allowed(userID, actionType, resourceID))
         elif option == 5:
-            object.assignRole()
+            user_id = raw_input("Enter User ID: ")
+            role_id = raw_input("Enter Role Name: ")
+            print(object.assignRole(user_id, role_id))
         elif option == 6:
-            object.removeRole()
+            user_id = raw_input("Enter User ID: ")
+            role_id = raw_input("Enter Role Name: ")
+            print(object.removeRole(user_id, role_id))
         elif option == 7:
             exit(0)
         else:
