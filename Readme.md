@@ -16,6 +16,22 @@ $ Virtualenv env -p python3
 $ source ~/env/bin/activate
 $ pip install -r requirement.txt
 ```
+
+## Run All UnitTestCase
+
+```
+$ Virtualenv env -p python3
+$ source ~/env/bin/activate
+$ python -m unittest discover test
+```
+
+## Run Single UnitTestCase
+
+```
+$ Virtualenv env -p python3
+$ source ~/env/bin/activate
+$ python -m unittest test.filename
+```
  
 ## Operations Allowed
 
@@ -28,6 +44,6 @@ $ pip install -r requirement.txt
 
 ## Run Program
 
- - cd RBAC
+ - cd RBAC/src
  - python RBAC.py, follow the instructions given on the terminal
 
