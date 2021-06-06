@@ -27,25 +27,23 @@ config = {
             'Name': 'Admin'
         }
     },
-}
-
-RoleResourceActionTypeMapping = {
-    "RO2":{
-        "RE0": ['Read', 'Write', 'Delete'],
-        "RE1": ['Read', 'Write', 'Delete'],
-        "RE2": ['Read', 'Write', 'Delete'],
+    "RoleResourceActionTypeMapping": {
+        "RO2":{
+            "RE0": ['Read', 'Write', 'Delete'],
+            "RE1": ['Read', 'Write', 'Delete'],
+            "RE2": ['Read', 'Write', 'Delete'],
+        },
+        "RO1":{
+            "RE0": ['Read', 'Write', 'Delete'],
+            "RE1": ['Read', 'Write', 'Delete'],
+        },
+        "RO0":{
+            "RE0": ['Read', 'Write', 'Delete'],
+        }
     },
-    "RO1":{
-        "RE0": ['Read', 'Write', 'Delete'],
-        "RE1": ['Read', 'Write', 'Delete'],
-    },
-    "RO0":{
-        "RE0": ['Read', 'Write', 'Delete'],
-    }
-}
-
-UserRoleMapping = {
-    "U0":{
-        "Role": ["RO2"]
+    "UserRoleMapping": {
+        "U0":{
+            "Role": ["RO2"]
+        }
     }
 }

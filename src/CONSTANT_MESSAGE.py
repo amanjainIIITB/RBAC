@@ -1,6 +1,7 @@
 message = {
     "UserExist": "hi! you are logged in as ",
     "UserNotExist": "User Doesn't Exist!!",
+    "UserCreated": "User Created Successfully.",
     "InvalidUser": "Invalid User ID",
     "InvalidActionType": "Invalid Action Type",
     "InvalidRole": "Invalid Role ID",

@@ -1,6 +1,8 @@
-from config import config, UserRoleMapping, RoleResourceActionTypeMapping
+from config import config
 from CONSTANT_MESSAGE import message
 from prettytable import PrettyTable
+import json
+import sys
 
 class RoleBaseAccessControl:
     def loginUser(self, userID):
@@ -36,12 +38,12 @@ class RoleBaseAccessControl:
             return message["InvalidActionType"]
         elif resourceID not in config['RESOURCE'].keys():
             return message["ResourceNotFound"]
-        elif userID not in UserRoleMapping:
+        elif userID not in config["UserRoleMapping"]:
             return message["AccessNotAllowed"]
         else:
-            roles = UserRoleMapping[userID]["Role"]
+            roles = config["UserRoleMapping"][userID]["Role"]
             for role in roles:
-                resourceActionMapping = RoleResourceActionTypeMapping[role]
+                resourceActionMapping = config["RoleResourceActionTypeMapping"][role]
                 for resource_id in resourceActionMapping.keys():
                     if resourceID == resource_id and actionType in resourceActionMapping[resource_id]:
                         is_access_allowed = True
@@ -57,13 +59,13 @@ class RoleBaseAccessControl:
             return message["InvalidUser"]
         elif role_id not in config["ROLE"].keys():
             return message["InvalidRole"]
-        elif user_id in UserRoleMapping and role_id in UserRoleMapping[user_id]["Role"]:
+        elif user_id in config["UserRoleMapping"] and role_id in config["UserRoleMapping"][user_id]["Role"]:
             return message["RoleAlreadyAssigned"]
-        elif user_id in UserRoleMapping:
-            UserRoleMapping[user_id]["Role"].append(role_id)
+        elif user_id in config["UserRoleMapping"]:
+            config["UserRoleMapping"][user_id]["Role"].append(role_id)
             return message["RoleAssigned"]
         else:
-            UserRoleMapping[user_id] = {
+            config["UserRoleMapping"][user_id] = {
                 "Role": [role_id]
             }
             return ""
@@ -73,15 +75,15 @@ class RoleBaseAccessControl:
             return message["InvalidUser"]
         elif role_id not in config["ROLE"].keys():
             return message["InvalidRole"]
-        elif user_id not in UserRoleMapping or role_id not in UserRoleMapping[user_id]["Role"]:
+        elif user_id not in config["UserRoleMapping"] or role_id not in config["UserRoleMapping"][user_id]["Role"]:
             return message["RoleNotFoundInUserAccount"]
-        elif user_id in UserRoleMapping:
-            roles = UserRoleMapping[user_id]["Role"]
+        elif user_id in config["UserRoleMapping"]:
+            roles = config["UserRoleMapping"][user_id]["Role"]
             if role_id in roles:
                 if len(roles) ==1:
-                    UserRoleMapping.pop(user_id)
+                    config["UserRoleMapping"].pop(user_id)
                 else:
-                    UserRoleMapping[user_id]["Role"].remove(role_id)
+                    config["UserRoleMapping"][user_id]["Role"].remove(role_id)
             return message["RoleRemoved"]
         else:
             return message["ContactSystemAdmin"]
@@ -105,6 +107,7 @@ if __name__ == '__main__':
             print("Enter the User Details Below:")
             name = raw_input("Enter User Name: ")
             object.createUser(name)
+            print(message["UserCreated"])
         elif option == 3:
             dataset = object.viewRoles()
             object.printPrettyTable(dataset)
@@ -125,10 +128,9 @@ if __name__ == '__main__':
             exit(0)
         else:
             print(message["InvalidInput"])
-
-        print("############################################################ Data ##############################################################")
-        print("config", config)
-        print("UserRoleMapping", UserRoleMapping)
-        print("RoleResourceActionTypeMapping", RoleResourceActionTypeMapping)
-        print("################################################################################################################################")
+        print(sys.argv)
+        if len(sys.argv) > 1 and sys.argv[1]=='--debug':
+            print("############################################################ Data ##############################################################")
+            print(json.dumps(config, indent = 3))
+            print("################################################################################################################################")
 
