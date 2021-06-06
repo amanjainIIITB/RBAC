@@ -1,12 +1,13 @@
 from config import config, UserRoleMapping, RoleResourceActionTypeMapping
+from CONSTANT_MESSAGE import message
 from prettytable import PrettyTable
 
 class RoleBaseAccessControl:
     def loginUser(self, userID):
         if userID in config['USER']:
-            return "hi! you are logged in as "+str(userID)+", "+str(config['USER'][userID]['Name'])
+            return message["UserExist"]+str(userID)+", "+str(config['USER'][userID]['Name'])
         else:
-            return "User Doesn't Exist!!"
+            return message["UserNotExist"]
 
     def createUser(self, name):
         user_id = 'U'+str(len(config['USER']))
@@ -30,13 +31,13 @@ class RoleBaseAccessControl:
     def is_access_allowed(self, userID, actionType, resourceID):
         is_access_allowed = False
         if userID not in config["USER"].keys():
-            return "Incorrect User ID"
+            return message["InvalidUser"]
         elif actionType not in config['ACTION_TYPE']:
-            return "Incorrect Action Type"
+            return message["InvalidActionType"]
         elif resourceID not in config['RESOURCE'].keys():
-            return 'Resource not Found'
+            return message["ResourceNotFound"]
         elif userID not in UserRoleMapping:
-            return "You are not allowed to access the given Resource"
+            return message["AccessNotAllowed"]
         else:
             roles = UserRoleMapping[userID]["Role"]
             for role in roles:
@@ -46,34 +47,34 @@ class RoleBaseAccessControl:
                         is_access_allowed = True
                         break
             if is_access_allowed:
-                return "You are allowed to access the given Resource"
+                return message["AccessAllowed"]
             else:
-                return "You are not allowed to access the given Resource"
+                return message["AccessNotAllowed"]
 
 
     def assignRole(self, user_id, role_id):
         if user_id not in config["USER"].keys():
-            return "Incorrect User ID"
+            return message["InvalidUser"]
         elif role_id not in config["ROLE"].keys():
-            return "Invalid Role ID"
+            return message["InvalidRole"]
         elif user_id in UserRoleMapping and role_id in UserRoleMapping[user_id]["Role"]:
-            return "Role has already been assigned to the User"
+            return message["RoleAlreadyAssigned"]
         elif user_id in UserRoleMapping:
             UserRoleMapping[user_id]["Role"].append(role_id)
-            return "Role has been assigned to the User"
+            return message["RoleAssigned"]
         else:
             UserRoleMapping[user_id] = {
                 "Role": [role_id]
             }
-            return "Role has been assigned to the User"
+            return ""
 
     def removeRole(self, user_id, role_id):
         if user_id not in config["USER"].keys():
-            return "Incorrect User ID"
+            return message["InvalidUser"]
         elif role_id not in config["ROLE"].keys():
-            return "Invalid Role ID"
+            return message["InvalidRole"]
         elif user_id not in UserRoleMapping or role_id not in UserRoleMapping[user_id]["Role"]:
-            return "There is no such role in the user account"
+            return message["RoleNotFoundInUserAccount"]
         elif user_id in UserRoleMapping:
             roles = UserRoleMapping[user_id]["Role"]
             if role_id in roles:
@@ -81,9 +82,9 @@ class RoleBaseAccessControl:
                     UserRoleMapping.pop(user_id)
                 else:
                     UserRoleMapping[user_id]["Role"].remove(role_id)
-            return "Role has been removed from the User"
+            return message["RoleRemoved"]
         else:
-            return "Contact System Administrator"
+            return message["ContactSystemAdmin"]
 
 if __name__ == '__main__':
     object = RoleBaseAccessControl()
@@ -123,7 +124,7 @@ if __name__ == '__main__':
         elif option == 7:
             exit(0)
         else:
-            print("Invalid Input, Please try again")
+            print(message["InvalidInput"])
 
         print("############################################################ Data ##############################################################")
         print("config", config)

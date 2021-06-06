@@ -1,6 +1,5 @@
 import unittest
 from src.RBAC import RoleBaseAccessControl
-from src.config import config
 
 class TestViewRole(unittest.TestCase):
 
