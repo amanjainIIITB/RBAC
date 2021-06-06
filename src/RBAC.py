@@ -1,92 +1,118 @@
-from config import config
 from CONSTANT_MESSAGE import message
 from prettytable import PrettyTable
-import json
 import sys
+import json
+
+# Opening JSON file
+with open('src/config.json') as json_file:
+    config = json.load(json_file)
 
 class RoleBaseAccessControl:
+
     def loginUser(self, userID):
-        if userID in config['USER']:
-            return message["UserExist"]+str(userID)+", "+str(config['USER'][userID]['Name'])
-        else:
-            return message["UserNotExist"]
+        try:
+            if userID in config['USER']:
+                return message["UserExist"]+str(userID)+", "+str(config['USER'][userID]['Name'])
+            else:
+                return message["UserNotExist"]
+        except:
+            print(message["ContactSystemAdmin"])
 
     def createUser(self, name):
-        user_id = 'U'+str(len(config['USER']))
-        config['USER'][user_id] = {'Name': name}
-        return config
+        try:
+            user_id = 'U'+str(len(config['USER']))
+            config['USER'][user_id] = {'Name': name}
+            return config
+        except:
+            print(message["ContactSystemAdmin"])
 
     def viewRoles(self):
-        dataset = list()
-        for role in config['ROLE']:
-            dataset.append([role, config['ROLE'][role]['Name']])
-        return dataset
+        try:
+            dataset = list()
+            for role in config['ROLE']:
+                dataset.append([role, config['ROLE'][role]['Name']])
+            return dataset
+        except:
+            print(message["ContactSystemAdmin"])
 
     def printPrettyTable(self, dataset):
-        prettyTable = PrettyTable()
-        prettyTable.field_names = ["Resource ID", "Resource Name"]
-        print("Below are the list of Roles:")
-        for data in dataset:
-            prettyTable.add_row(data)
-        print(prettyTable)
+        try:
+            prettyTable = PrettyTable()
+            prettyTable.field_names = ["Resource ID", "Resource Name"]
+            print("Below are the list of Roles:")
+            for data in dataset:
+                prettyTable.add_row(data)
+            print(prettyTable)
+        except:
+            print(message["ContactSystemAdmin"])
 
     def is_access_allowed(self, userID, actionType, resourceID):
-        is_access_allowed = False
-        if userID not in config["USER"].keys():
-            return message["InvalidUser"]
-        elif actionType not in config['ACTION_TYPE']:
-            return message["InvalidActionType"]
-        elif resourceID not in config['RESOURCE'].keys():
-            return message["ResourceNotFound"]
-        elif userID not in config["UserRoleMapping"]:
-            return message["AccessNotAllowed"]
-        else:
-            roles = config["UserRoleMapping"][userID]["Role"]
-            for role in roles:
-                resourceActionMapping = config["RoleResourceActionTypeMapping"][role]
-                for resource_id in resourceActionMapping.keys():
-                    if resourceID == resource_id and actionType in resourceActionMapping[resource_id]:
-                        is_access_allowed = True
-                        break
-            if is_access_allowed:
-                return message["AccessAllowed"]
-            else:
+        try:
+            is_access_allowed = False
+            if userID not in config["USER"].keys():
+                return message["InvalidUser"]
+            elif actionType not in config['ACTION_TYPE']:
+                return message["InvalidActionType"]
+            elif resourceID not in config['RESOURCE'].keys():
+                return message["ResourceNotFound"]
+            elif userID not in config["UserRoleMapping"]:
                 return message["AccessNotAllowed"]
+            else:
+                roles = config["UserRoleMapping"][userID]["Role"]
+                for role in roles:
+                    resourceActionMapping = config["RoleResourceActionTypeMapping"][role]
+                    for resource_id in resourceActionMapping.keys():
+                        if resourceID == resource_id and actionType in resourceActionMapping[resource_id]:
+                            is_access_allowed = True
+                            break
+                if is_access_allowed:
+                    return message["AccessAllowed"]
+                else:
+                    return message["AccessNotAllowed"]
+        except:
+            print(message["ContactSystemAdmin"])
 
 
     def assignRole(self, user_id, role_id):
-        if user_id not in config["USER"].keys():
-            return message["InvalidUser"]
-        elif role_id not in config["ROLE"].keys():
-            return message["InvalidRole"]
-        elif user_id in config["UserRoleMapping"] and role_id in config["UserRoleMapping"][user_id]["Role"]:
-            return message["RoleAlreadyAssigned"]
-        elif user_id in config["UserRoleMapping"]:
-            config["UserRoleMapping"][user_id]["Role"].append(role_id)
-            return message["RoleAssigned"]
-        else:
-            config["UserRoleMapping"][user_id] = {
-                "Role": [role_id]
-            }
-            return ""
+        try:
+            if user_id not in config["USER"].keys():
+                return message["InvalidUser"]
+            elif role_id not in config["ROLE"].keys():
+                return message["InvalidRole"]
+            elif user_id in config["UserRoleMapping"] and role_id in config["UserRoleMapping"][user_id]["Role"]:
+                return message["RoleAlreadyAssigned"]
+            elif user_id in config["UserRoleMapping"]:
+                config["UserRoleMapping"][user_id]["Role"].append(role_id)
+                return message["RoleAssigned"]
+            else:
+                config["UserRoleMapping"][user_id] = {
+                    "Role": [role_id]
+                }
+                return ""
+        except:
+            print(message["ContactSystemAdmin"])
 
     def removeRole(self, user_id, role_id):
-        if user_id not in config["USER"].keys():
-            return message["InvalidUser"]
-        elif role_id not in config["ROLE"].keys():
-            return message["InvalidRole"]
-        elif user_id not in config["UserRoleMapping"] or role_id not in config["UserRoleMapping"][user_id]["Role"]:
-            return message["RoleNotFoundInUserAccount"]
-        elif user_id in config["UserRoleMapping"]:
-            roles = config["UserRoleMapping"][user_id]["Role"]
-            if role_id in roles:
-                if len(roles) ==1:
-                    config["UserRoleMapping"].pop(user_id)
-                else:
-                    config["UserRoleMapping"][user_id]["Role"].remove(role_id)
-            return message["RoleRemoved"]
-        else:
-            return message["ContactSystemAdmin"]
+        try:
+            if user_id not in config["USER"].keys():
+                return message["InvalidUser"]
+            elif role_id not in config["ROLE"].keys():
+                return message["InvalidRole"]
+            elif user_id not in config["UserRoleMapping"] or role_id not in config["UserRoleMapping"][user_id]["Role"]:
+                return message["RoleNotFoundInUserAccount"]
+            elif user_id in config["UserRoleMapping"]:
+                roles = config["UserRoleMapping"][user_id]["Role"]
+                if role_id in roles:
+                    if len(roles) ==1:
+                        config["UserRoleMapping"].pop(user_id)
+                    else:
+                        config["UserRoleMapping"][user_id]["Role"].remove(role_id)
+                return message["RoleRemoved"]
+            else:
+                return message["ContactSystemAdmin"]
+        except:
+            print(message["ContactSystemAdmin"])
+
 
 if __name__ == '__main__':
     object = RoleBaseAccessControl()
@@ -128,7 +154,6 @@ if __name__ == '__main__':
             exit(0)
         else:
             print(message["InvalidInput"])
-        print(sys.argv)
         if len(sys.argv) > 1 and sys.argv[1]=='--debug':
             print("############################################################ Data ##############################################################")
             print(json.dumps(config, indent = 3))

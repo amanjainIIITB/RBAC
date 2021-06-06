@@ -1,6 +1,5 @@
 import unittest
-from src.RBAC import RoleBaseAccessControl
-from src.config import config
+from src.RBAC import RoleBaseAccessControl, config
 from src.CONSTANT_MESSAGE import message
 
 
