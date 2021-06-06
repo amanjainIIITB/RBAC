@@ -125,32 +125,32 @@ if __name__ == '__main__':
         print("press 5 for assign/edit role")
         print("press 6 for remove role")
         print("press 7 for Program Exit")
-        option = input()
-        if option == 1:
+        option = raw_input()
+        if option == '1':
             userID = raw_input("Enter User ID: ")
             print(object.loginUser(userID))
-        elif option == 2:
+        elif option == '2':
             print("Enter the User Details Below:")
             name = raw_input("Enter User Name: ")
             object.createUser(name)
             print(message["UserCreated"])
-        elif option == 3:
+        elif option == '3':
             dataset = object.viewRoles()
             object.printPrettyTable(dataset)
-        elif option == 4:
+        elif option == '4':
             userID = raw_input("Enter User ID: ")
             actionType = raw_input("Enter Action Type(Read/Write/Delete): ")
             resourceID = raw_input("Enter Resource ID: ")
             print(object.is_access_allowed(userID, actionType, resourceID))
-        elif option == 5:
+        elif option == '5':
             user_id = raw_input("Enter User ID: ")
             role_id = raw_input("Enter Role Name: ")
             print(object.assignRole(user_id, role_id))
-        elif option == 6:
+        elif option == '6':
             user_id = raw_input("Enter User ID: ")
             role_id = raw_input("Enter Role Name: ")
             print(object.removeRole(user_id, role_id))
-        elif option == 7:
+        elif option == '7':
             exit(0)
         else:
             print(message["InvalidInput"])
