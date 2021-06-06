@@ -9,18 +9,26 @@ ACTION TYPE defines the access level (Ex: READ, WRITE, DELETE)
 Access to resources for users are controlled strictly by the role. One user can have multiple roles. Given a user, action type and resource, the system should be able to tell whether user has access or not.
 
 
-## Installation
+## Run Application without Docker
 
 ```
-$ Virtualenv env -p python3
+$ Virtualenv env -p python2
 $ source ~/env/bin/activate
 $ pip install -r requirement.txt
+$ python src/RBAC.py
+```
+
+## Run Application with Docker
+
+```
+$ docker build -t python-rbac .
+$ docker run -ti python-rbac
 ```
 
 ## Run All UnitTestCase
 
 ```
-$ Virtualenv env -p python3
+$ Virtualenv env -p python2
 $ source ~/env/bin/activate
 $ python -m unittest discover test
 ```
@@ -28,10 +36,11 @@ $ python -m unittest discover test
 ## Run Single UnitTestCase
 
 ```
-$ Virtualenv env -p python3
+$ Virtualenv env -p python2
 $ source ~/env/bin/activate
 $ python -m unittest test.filename
 ```
+
  
 ## Operations Allowed
 
